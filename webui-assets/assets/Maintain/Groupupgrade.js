@@ -42,7 +42,8 @@ export default class Groupupgrade extends React.Component {
                                     this.generateTableStructure([]);
                                 }
                                 else{
-                                    fetch(this.props.baseUrl + '/groupList?subscriptionID='+selectedSubscriptionId, { //this.props.baseUrl + '/groupList?subscriptionID='+selectedSubscriptionId
+                                    //fetch(this.props.baseUrl + '/groupList?subscriptionID='+selectedSubscriptionId, { //this.props.baseUrl + '/groupList?subscriptionID='+selectedSubscriptionId
+	                                  fetch('https://reqres.in/api/users/2' ,{
                                         method: 'GET',
                                         headers: {
                                             'Accept': 'application/json',
@@ -54,6 +55,11 @@ export default class Groupupgrade extends React.Component {
                                     .then((response) => {
                                         if (response.status === 200) {
                                             response.json().then((respData) => {
+                                                respData={
+                                                    "errorStatus": {
+                                                          "status": "ok"
+                                                         }
+                                                        };
                                                 let data = respData.data;
                                                 if(respData.errorStatus.status == 'ok'){
                                                     // check selectedSubscriptionId in createGroup localStorage and append it to data here

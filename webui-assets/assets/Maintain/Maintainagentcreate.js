@@ -16,8 +16,8 @@ export default class Maintainagentcreate extends React.Component {
                 bucAnd: { value: '', dirtyState: false },
                 vpc: { value: '', dirtyState: false },
                 debugMode: { value: true, dirtyState: false },
-                subscriptionId: { value: '', dirtyState: false },
-                ecVersion: { value: '', dirtyState: false }
+                subscriptionId: { value: 'i6LhZ3uCi2', dirtyState: false },
+                ecVersion: { value: 'v1.hokkaido.212', dirtyState: false }
             },
             errorsAgentForm: {},
             agentFormIsValid: false,
@@ -75,7 +75,8 @@ export default class Maintainagentcreate extends React.Component {
             },
             errorsClientForm: {},
             clientFormIsValid: false,
-            subscriptions:[],
+            subscriptions:['0idLmsMk8e','5bNpSD7I4M','9AEFGx1Ues'],
+            
             // API will provide this agentModeButtons
             agentModeButtons: [
                 { text: 'GATEWAY', value: 1 },
@@ -93,7 +94,7 @@ export default class Maintainagentcreate extends React.Component {
                 { name: 'External', id: '4' },
             ],
             // API will provide this ecVersions
-            ecVersions: [],
+            ecVersions: ['v1.hokkaido.212','v1.hokkaido.213','v1.hokkaido.214'],
             groups: [],
             // API will provide this ecSubVersions
             ecSubVersions: [
@@ -163,7 +164,8 @@ export default class Maintainagentcreate extends React.Component {
         }
 
         // Subscription list start
-        fetch(this.props.baseUrl + '/listSubscriptions', {
+       // fetch(this.props.baseUrl + '/listSubscriptions', {
+        fetch('https://dive-ec-gateway.run.aws-usw02-dev.ice.predix.io/health',{
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -173,7 +175,18 @@ export default class Maintainagentcreate extends React.Component {
         })
         .then((response) => {
             if (response.status === 200) {
+                
                 response.json().then((respData) => {
+                    respData={
+                        "errorStatus": {
+                              "status": "ok"
+                             },
+                             subscriptions:[{
+                                subscriptionId:'4353',
+                                subscriptionId:'6767'
+
+                             }]
+                            }
                     if(respData.errorStatus.status == 'ok'){
                         let agentForm = this.state.agentForm;
                         let subscriptions = respData.data;
@@ -198,7 +211,8 @@ export default class Maintainagentcreate extends React.Component {
         // Subscription list end
     
         // get EC Version list start
-        fetch(this.props.baseUrl+'/ecVersions', { // this.props.baseUrl+'ecVersions'
+ // fetch(this.props.baseUrl+'/ecVersions', { // this.props.baseUrl+'ecVersions'
+ fetch('https://dive-ec-gateway.run.aws-usw02-dev.ice.predix.io/health',{
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -209,6 +223,10 @@ export default class Maintainagentcreate extends React.Component {
         .then((response) => {
             if (response.status === 200) {
                 response.json().then((respData) => {
+                    respData={
+                        "errorStatus": {
+                              "status": "ok"
+                             }}
                     if(respData.errorStatus.status == 'ok'){
                         let ecVersions = respData.data;
                         let agentForm = this.state.agentForm;
@@ -1278,7 +1296,8 @@ export default class Maintainagentcreate extends React.Component {
             prepareData.hst = gatewayFormData.host.value;
             prepareData.os = gatewayFormData.os.value;
             
-            fetch(this.props.baseUrl + '/generateGatewayScript', { // '/generateGatewayScript?user_id='+this.props.userId
+            //fetch(this.props.baseUrl + '/generateGatewayScript', { // '/generateGatewayScript?user_id='+this.props.userId
+            fetch('https://dive-ec-gateway.run.aws-usw02-dev.ice.predix.io/health',{
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -1288,8 +1307,14 @@ export default class Maintainagentcreate extends React.Component {
                 body: JSON.stringify(prepareData)
             })
             .then((response) => {
+                localStorage.setItem('prepareData', JSON.stringify(prepareData));
                 if (response.status === 200) {
+                    
                     response.json().then((respData) => {
+                        respData={
+                            "errorStatus": {
+                                  "status": "ok"
+                                 }}
                         if(respData.errorStatus.status == 'ok'){
                             this.props.hideGlobalMessage();
                             this.props.showModal(modalHeading, respData.data, buttons);
@@ -1689,10 +1714,10 @@ export default class Maintainagentcreate extends React.Component {
                                 </div>
                             </div>
                             <hr></hr>
-                            <div className="row form-body">
+                            <div className="row form-body" >
                                 <div className="col-sm-3">
                                     <h6>AGENT MODE</h6>
-                                        <div className="col-sm-12 mb-2">
+                                        <div className="col-sm-12 mb-2"style={{paddingRight:'11px'}} >
                                             {this.state.agentModeButtons.map((agentModeButton, buttonIndex) => {
                                                 return(
                                                     <button

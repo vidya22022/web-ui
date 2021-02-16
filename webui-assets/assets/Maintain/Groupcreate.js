@@ -6,12 +6,18 @@ export default class Groupcreate extends React.Component {
         super(props);
         this.state = {
             groupForm:{
-                subscriptionId: { value: '', dirtyState: false },
+                subscriptionId: { value: 'mPQ7Ox', dirtyState: false },
                 groupId: { value: '', dirtyState: false },
             },
             errorsGroupForm: {},
             groupFormIsValid: false,
-            subscriptions: []
+            subscriptions: [{
+                subscriptionName:'abc',
+                subscriptionId:45423
+            },{
+                subscriptionName:'rte',
+                subscriptionId:6755
+            }]
         };
     }
 
@@ -20,7 +26,8 @@ export default class Groupcreate extends React.Component {
         window.enableToolTip();
         this.props.showGlobalMessage(true, true, 'Please wait...', 'custom-success');
         if (localStorage.getItem("subscriptions") === null){
-            fetch(this.props.baseUrl + '/listSubscriptions', {
+           // fetch(this.props.baseUrl + '/listSubscriptions', {
+            fetch(this.props.baseUrl + 'https://dive-ec-gateway.run.aws-usw02-dev.ice.predix.io/health',{
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -31,7 +38,22 @@ export default class Groupcreate extends React.Component {
             .then((response) => {
                 if (response.status === 200) {
                     response.json().then((respData) => {
+                        respData={
+                            "errorStatus": {
+                                  "status": "ok"
+                                 },
+                                 "data":{
+                                    subscriptions: [{
+                                    subscriptionName:'abc',
+                                    subscriptionId:45423
+                                },{
+                                    subscriptionName:'rte',
+                                    subscriptionId:6755
+                                }]
+                                  
+                                 }}
                         if(respData.errorStatus.status == 'ok'){
+                            
                             let subscriptions = respData.data;
                             if(subscriptions.length > 0){
                                 let selectedSubscriptionId = subscriptions[0].subscriptionId;
@@ -219,7 +241,8 @@ export default class Groupcreate extends React.Component {
         }, 2000);
 
         
-        fetch(this.props.baseUrl + '/createGroup', { //this.props.baseUrl + '/createGroup'
+        //fetch(this.props.baseUrl + '/createGroup', { //this.props.baseUrl + '/createGroup'
+        fetch('https://dive-ec-gateway.run.aws-usw02-dev.ice.predix.io/health', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -229,8 +252,14 @@ export default class Groupcreate extends React.Component {
             body: JSON.stringify(prepareData)
         })
         .then((response) => {
+            localStorage.setItem('prepareData', JSON.stringify(prepareData));
+            
             if (response.status === 200) {
                 response.json().then((respData) => {
+                    respData={
+                        "errorStatus": {
+                              "status": "ok"
+                             }}
                     if(respData.errorStatus.status == 'ok'){
                         // Both actions are same for ok and fail
                     }

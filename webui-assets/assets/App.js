@@ -52,18 +52,56 @@ export default class App extends React.Component {
         email: '',
         name: ''
       },
-      permissions: {},
-      apiEndPoints: {
-        baseUrl : API_URL,
-      },
+ permissions: {accesses:
+          {dashboard: {haveAccess:true},
+           view:{haveAccess:true},
+           maintain:{haveAccess:true,
+            subMenus:{subscriptions:{
+                     create:true,
+                     edit:false,
+                     delete:false,
+                    },
+                    groups:{
+                    create:true,
+                    edit:false,
+                    delete:false,
+                    view:true
+                    },
+                    agents:{
+                    create:true
+                    },
+                    watchers:{
+                    create:true,
+                    edit:false,
+                    delete:false,
+                    view:true
+                    }         
+            }}, 
+           monitor:{haveAccess:true,
+            subMenus:{
+              notifications:{
+                view:true
+                },
+                alerts:{
+                  view:true
+                },
+                healthStatus:{
+                  view:true
+                }
+            }},
+           reports:{haveAccess:true},
+           settings:{haveAccess:true},
+           support:{haveAccess:true}}
+          },
       isFullScreenModal: false,
       notificationModal:{
         headerText:'',
         bodyText:'',
         buttons:[]
-      }
-    
-    };
+      },
+      apiEndPoints:{
+       baseUrl:''}
+     };
   }
 
   /* istanbul ignore next */
@@ -75,8 +113,11 @@ export default class App extends React.Component {
     });
 
     // Get logged user's userId start
-    fetch(this.state.apiEndPoints.baseUrl + '/getDevId', {
-      method: 'GET',
+   // fetch(this.state.apiEndPoints.baseUrl + '/getDevId', {
+//fetch('./asset/vidya.json' , {
+	  fetch('https://reqres.in/api/users/2' ,{
+      dataType: "json",
+      async: false,
       headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -86,88 +127,31 @@ export default class App extends React.Component {
     .then((response) => {
         if (response.status === 200) {
           response.json().then((respData) => {
+          respData={
+	      "errorStatus": {
+                "status": "ok"
+               },
+			       "data": {
+                "user_id": 2323,
+                "name": "abc",
+                "email": "abc33@gmail.com",
+                "permissions": ""
+              }
+}
             if (respData.errorStatus.status === 'ok') {
-              /*respData.data.permissions = {
-                "roleId": 1,
-                "roleName": "Admin",
-                "accesses": {
-                  "dashboard": {
-                    "haveAccess": true
-                  },
-                  "view": {
-                    "haveAccess": true
-                  },
-                  "maintain": {
-                      "haveAccess": true,
-                      "subMenus":{
-                          "subscriptions": {
-                              "create": true,
-                              "view": true,
-                              "edit": true,
-                              "delete": true
-                          },
-                          "groups": {
-                              "create": true,
-                              "view": true,
-                              "edit": true,
-                              "delete": true
-                          },
-                          "agents": {
-                              "create": true,
-                              "view": true,
-                              "edit": true,
-                              "delete": true
-                          },
-                          "watchers": {
-                              "create": true,
-                              "view": true,
-                              "edit": true,
-                              "delete": true
-                          }
-                      }
-                  },
-                  "monitor": {
-                    "haveAccess": true,
-                    "subMenus":{
-                      "notifications": {
-                          "view": true,
-                          "edit": true,
-                          "delete": true
-                      },
-                      "alerts": {
-                          "view": true,
-                          "edit": true,
-                          "delete": true
-                      },
-                      "healthStatus": {
-                          "view": true,
-                          "edit": true,
-                          "delete": true
-                      }
-                    }
-                  },
-                  "reports": {
-                    "haveAccess": true
-                  },
-                  "settings": {
-                    "haveAccess": true
-                  },
-                  "support": {
-                    "haveAccess": true
-                  },
-                }
-              };*/
+		  
+		
               let userId = respData.data.user_id;
               let profileName = respData.data.name;
               let profileEmailId = respData.data.email;
-              let permissions = respData.data.permissions;
+//let permissions = respData.data.permissions;
               this.setState({
                 profileData: {
                   email: profileEmailId,
                   name: profileName
                 },
                 userId: userId,
-                permissions: permissions,
+               // permissions: permissions,
                 currentView: 'Dashboard'
               });
             }
@@ -206,8 +190,10 @@ export default class App extends React.Component {
 
   /* istanbul ignore next */
   getAuthTokenFromBackend(){ 
-    fetch(this.state.apiEndPoints.baseUrl + '/refershToken' , {
-      method: 'GET',
+    //fetch(this.state.apiEndPoints.baseUrl + '/refershToken' , {
+     //fetch('./asset/vidya.json' , {
+    fetch('https://reqres.in/api/users/2' ,{
+	method: 'GET',
       headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -217,8 +203,13 @@ export default class App extends React.Component {
     .then((response) => {
         if (response.status === 200) {
           response.json().then((respData) => {
+			  respData={
+	      "errorStatus": {
+                "status": "ok"
+               
+			  }}
             if (respData.errorStatus.status === 'ok') {
-              let newToken = respData.data;
+              let newToken = 123;//respData.data;
               this.setState({
                 authToken: newToken
               });
